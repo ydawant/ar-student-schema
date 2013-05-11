@@ -3,11 +3,14 @@ require 'date'
 require_relative '../../db/config'
 
 class Student < ActiveRecord::Base
+  has_many :classes
+  has_many :teachers, :through => :classes
   validates :email, :format => { :with => /\S+@\S+\.\S{2,}/, :message => "invalid email"}
   validates :phone, :format => { :with => /\(?\d{3}\)?.?\d{3}.?\d{4}.{2}?\d*/, :message => "bad phone"}
   validate :phone_count
   validate :validate_age
   validates :email, :uniqueness => true
+
   def name
     self.first_name + ' ' + self.last_name    
   end
@@ -29,6 +32,5 @@ class Student < ActiveRecord::Base
       errors.add(:phone, "missing didgets")
     end
   end
-
-
 end
+
